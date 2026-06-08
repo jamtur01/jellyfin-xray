@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "esbuild src/index.js --bundle --format=iife --minify --loader:.css=text --outfile=dist/xray.js",
+    "build": "esbuild Web/src/index.js --bundle --format=iife --minify --loader:.css=text --outfile=Web/dist/xray.js",
     "test": "vitest run"
   },
   "devDependencies": {
