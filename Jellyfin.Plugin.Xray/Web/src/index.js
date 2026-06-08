@@ -24,6 +24,13 @@ function closePanel() {
     currentPanel.remove();
     currentPanel = null;
     document.removeEventListener('keydown', onKeydown);
+    document.removeEventListener('pointerdown', onOutsideClick);
+  }
+}
+
+function onOutsideClick(event) {
+  if (currentPanel && !currentPanel.contains(event.target)) {
+    closePanel();
   }
 }
 
@@ -65,6 +72,7 @@ async function openPanel() {
     currentPanel = buildPanel({ item, cast, apiClient: window.ApiClient, onClose: closePanel });
     host.appendChild(currentPanel);
     document.addEventListener('keydown', onKeydown);
+    setTimeout(function () { document.addEventListener('pointerdown', onOutsideClick); }, 0);
   } finally {
     panelLoading = false;
   }

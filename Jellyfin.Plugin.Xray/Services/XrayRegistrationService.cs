@@ -49,7 +49,10 @@ public sealed class XrayRegistrationService : IHostedService
     /// <inheritdoc />
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        _injector.UnregisterAll(LoaderPayload.PluginId);
+        if (_injector.IsAvailable)
+        {
+            _injector.UnregisterAll(LoaderPayload.PluginId);
+        }
         return Task.CompletedTask;
     }
 
