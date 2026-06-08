@@ -9,7 +9,6 @@ const cast = [
 ];
 
 beforeEach(() => {
-  document.body.innerHTML = '';
   window.location.hash = '';
 });
 
@@ -46,5 +45,15 @@ describe('buildPanel', () => {
   it('shows an empty message when there is no cast', () => {
     const panel = buildPanel({ item, cast: [], apiClient });
     expect(panel.querySelector('.xray-empty').textContent).toContain('No cast information');
+  });
+
+  it('shows an empty message when cast is null', () => {
+    const panel = buildPanel({ item, cast: null, apiClient });
+    expect(panel.querySelector('.xray-empty').textContent).toContain('No cast information');
+  });
+
+  it('does not throw when close button is clicked with no onClose', () => {
+    const panel = buildPanel({ item, cast, apiClient });
+    expect(() => panel.querySelector('.xray-close').click()).not.toThrow();
   });
 });

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { ensureButton } from './observer.js';
+import { ensureButton, startObserver } from './observer.js';
 
 beforeEach(() => {
   document.body.innerHTML = `
@@ -47,5 +47,25 @@ describe('ensureButton', () => {
     const xray = document.querySelector('.btnXray');
     expect(xray).not.toBeNull();
     expect(xray.parentElement.classList.contains('focuscontainer-x')).toBe(true);
+  });
+});
+
+describe('startObserver', () => {
+  it('observes body and injects the button immediately', () => {
+    const observeSpy = vi.fn();
+    const OriginalMO = global.MutationObserver;
+    global.MutationObserver = class {
+      constructor(cb) { this.cb = cb; }
+      observe(...a) { observeSpy(...a); }
+      disconnect() {}
+    };
+    try {
+      const onClick = vi.fn();
+      startObserver(onClick, 'people');
+      expect(observeSpy).toHaveBeenCalledWith(document.body, { childList: true, subtree: true });
+      expect(document.querySelector('.btnXray')).not.toBeNull();
+    } finally {
+      global.MutationObserver = OriginalMO;
+    }
   });
 });

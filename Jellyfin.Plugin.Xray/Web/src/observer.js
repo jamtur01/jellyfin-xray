@@ -7,11 +7,12 @@ export function ensureButton(root, onClick, icon) {
   }
   const settings = buttons.querySelector('.btnVideoOsdSettings');
 
+  const safeIcon = String(icon).replace(/[^a-z0-9_-]/gi, '');
   const button = root.createElement('button');
   button.setAttribute('is', 'paper-icon-button-light');
   button.className = `${BUTTON_CLASS} autoSize`;
   button.title = 'X-Ray';
-  button.innerHTML = `<span class="xlargePaperIconButton material-icons ${icon}" aria-hidden="true"></span>`;
+  button.innerHTML = `<span class="xlargePaperIconButton material-icons ${safeIcon}" aria-hidden="true"></span>`;
   button.addEventListener('click', onClick);
 
   if (settings) {

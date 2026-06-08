@@ -24,6 +24,10 @@ describe('selectCast', () => {
   it('tolerates missing People', () => {
     expect(selectCast(undefined)).toEqual([]);
   });
+
+  it('excludes entries with no Type', () => {
+    expect(selectCast([{ Name: 'X' }])).toEqual([]);
+  });
 });
 
 describe('contextHeader', () => {

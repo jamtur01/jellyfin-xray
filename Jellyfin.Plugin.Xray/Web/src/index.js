@@ -90,4 +90,11 @@ async function loadConfig() {
   injectStyles();
   await loadConfig();
   startObserver(openPanel, config.buttonIcon);
+
+  const teardownObserver = new MutationObserver(() => {
+    if (currentPanel && !document.contains(currentPanel)) {
+      closePanel();
+    }
+  });
+  teardownObserver.observe(document.body, { childList: true, subtree: true });
 })();

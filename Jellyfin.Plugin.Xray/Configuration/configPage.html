@@ -30,24 +30,25 @@
     <script type="text/javascript">
       (function () {
         var pluginId = 'b4e9c1a2-7d3f-4e8a-9c1b-2f6a5d8e3c7b';
-        var page = document;
-
         function loadStatus() {
           fetch(ApiClient.getUrl('XRay/config'))
             .then(function (r) { return r.ok; })
             .then(function (ok) {
-              page.querySelector('#xrayInjectorStatus').textContent = ok
+              document.querySelector('#xrayInjectorStatus').textContent = ok
                 ? 'X-Ray is serving its client script.'
                 : 'X-Ray script endpoint not reachable.';
+            })
+            .catch(function () {
+              document.querySelector('#xrayInjectorStatus').textContent = 'X-Ray status check failed.';
             });
         }
 
         document.querySelector('#XrayConfigPage').addEventListener('pageshow', function () {
           Dashboard.showLoadingMsg();
           ApiClient.getPluginConfiguration(pluginId).then(function (config) {
-            page.querySelector('#IncludeGuestStars').checked = config.IncludeGuestStars;
-            page.querySelector('#MaxCast').value = config.MaxCast;
-            page.querySelector('#ButtonIcon').value = config.ButtonIcon;
+            document.querySelector('#IncludeGuestStars').checked = config.IncludeGuestStars;
+            document.querySelector('#MaxCast').value = config.MaxCast;
+            document.querySelector('#ButtonIcon').value = config.ButtonIcon;
             Dashboard.hideLoadingMsg();
             loadStatus();
           });
@@ -57,14 +58,13 @@
           e.preventDefault();
           Dashboard.showLoadingMsg();
           ApiClient.getPluginConfiguration(pluginId).then(function (config) {
-            config.IncludeGuestStars = page.querySelector('#IncludeGuestStars').checked;
-            config.MaxCast = parseInt(page.querySelector('#MaxCast').value, 10);
-            config.ButtonIcon = page.querySelector('#ButtonIcon').value;
+            config.IncludeGuestStars = document.querySelector('#IncludeGuestStars').checked;
+            config.MaxCast = parseInt(document.querySelector('#MaxCast').value, 10);
+            config.ButtonIcon = document.querySelector('#ButtonIcon').value;
             ApiClient.updatePluginConfiguration(pluginId, config).then(function (result) {
               Dashboard.processPluginConfigurationUpdateResult(result);
             });
           });
-          return false;
         });
       })();
     </script>

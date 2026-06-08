@@ -21,6 +21,6 @@ export function contextHeader(item) {
     const title = item.Name ? `'${item.Name}'` : '';
     return [item.SeriesName, seasonEpisode, title].filter(Boolean).join(' · ');
   }
-  const year = item.ProductionYear ? ` (${item.ProductionYear})` : '';
-  return `${item.Name || ''}${year}`;
+  const year = item.ProductionYear ? `(${item.ProductionYear})` : '';
+  return [item.Name, year].filter(Boolean).join(' ');
 }

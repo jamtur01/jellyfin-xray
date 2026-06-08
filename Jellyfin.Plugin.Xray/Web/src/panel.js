@@ -1,7 +1,7 @@
 import { contextHeader } from './format.js';
 import { headshotUrl } from './data.js';
 
-function initials(name) {
+function firstInitial(name) {
   return (name || '?').trim().charAt(0).toUpperCase();
 }
 
@@ -20,7 +20,7 @@ function buildCard(person, apiClient) {
   } else {
     const placeholder = document.createElement('div');
     placeholder.className = 'xray-initials';
-    placeholder.textContent = initials(person.Name);
+    placeholder.textContent = firstInitial(person.Name);
     card.appendChild(placeholder);
   }
 
@@ -35,7 +35,7 @@ function buildCard(person, apiClient) {
   card.appendChild(role);
 
   card.addEventListener('click', () => {
-    window.location.hash = `#/details?id=${person.Id}`;
+    window.location.hash = `#/details?id=${encodeURIComponent(person.Id)}`;
   });
 
   return card;
