@@ -1,0 +1,52 @@
+name: Build plugin
+
+on:
+  push:
+    branches: [main]
+  release:
+    types: [released]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Build client bundle
+        working-directory: Jellyfin.Plugin.Xray
+        run: |
+          npm ci
+          npm run build
+          npm test
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Run .NET tests
+        run: dotnet test --configuration Release
+
+      - name: Build plugin package
+        uses: oddstr13/jellyfin-plugin-repository-manager@v1.1.1
+        id: jprm
+        with:
+          dotnet-target: "net9.0"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: plugin
+          path: ${{ steps.jprm.outputs.artifact }}
+
+      - name: Attach to release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.jprm.outputs.artifact }}
