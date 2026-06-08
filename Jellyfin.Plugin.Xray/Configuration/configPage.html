@@ -3,7 +3,71 @@
 <head><title>X-Ray</title></head>
 <body>
   <div id="XrayConfigPage" data-role="page" class="page type-interior pluginConfigurationPage">
-    <div data-role="content"><div class="content-primary"></div></div>
+    <div data-role="content">
+      <div class="content-primary">
+        <div id="xrayInjectorStatus" style="margin: 1em 0;"></div>
+        <form id="XrayConfigForm">
+          <div class="checkboxContainer checkboxContainer-withDescription">
+            <label>
+              <input is="emby-checkbox" type="checkbox" id="IncludeGuestStars" />
+              <span>Include guest stars</span>
+            </label>
+          </div>
+          <div class="inputContainer">
+            <label class="inputLabel inputLabelUnfocused" for="MaxCast">Maximum cast shown</label>
+            <input is="emby-input" type="number" id="MaxCast" min="1" max="200" />
+          </div>
+          <div class="inputContainer">
+            <label class="inputLabel inputLabelUnfocused" for="ButtonIcon">Button icon (Material Icons name)</label>
+            <input is="emby-input" type="text" id="ButtonIcon" />
+          </div>
+          <button is="emby-button" type="submit" class="raised button-submit block">
+            <span>Save</span>
+          </button>
+        </form>
+      </div>
+    </div>
+    <script type="text/javascript">
+      (function () {
+        var pluginId = 'b4e9c1a2-7d3f-4e8a-9c1b-2f6a5d8e3c7b';
+        var page = document;
+
+        function loadStatus() {
+          fetch(ApiClient.getUrl('XRay/config'))
+            .then(function (r) { return r.ok; })
+            .then(function (ok) {
+              page.querySelector('#xrayInjectorStatus').textContent = ok
+                ? 'X-Ray is serving its client script.'
+                : 'X-Ray script endpoint not reachable.';
+            });
+        }
+
+        document.querySelector('#XrayConfigPage').addEventListener('pageshow', function () {
+          Dashboard.showLoadingMsg();
+          ApiClient.getPluginConfiguration(pluginId).then(function (config) {
+            page.querySelector('#IncludeGuestStars').checked = config.IncludeGuestStars;
+            page.querySelector('#MaxCast').value = config.MaxCast;
+            page.querySelector('#ButtonIcon').value = config.ButtonIcon;
+            Dashboard.hideLoadingMsg();
+            loadStatus();
+          });
+        });
+
+        document.querySelector('#XrayConfigForm').addEventListener('submit', function (e) {
+          e.preventDefault();
+          Dashboard.showLoadingMsg();
+          ApiClient.getPluginConfiguration(pluginId).then(function (config) {
+            config.IncludeGuestStars = page.querySelector('#IncludeGuestStars').checked;
+            config.MaxCast = parseInt(page.querySelector('#MaxCast').value, 10);
+            config.ButtonIcon = page.querySelector('#ButtonIcon').value;
+            ApiClient.updatePluginConfiguration(pluginId, config).then(function (result) {
+              Dashboard.processPluginConfigurationUpdateResult(result);
+            });
+          });
+          return false;
+        });
+      })();
+    </script>
   </div>
 </body>
 </html>
