@@ -15,6 +15,7 @@
     <!-- The plugin excludes Newtonsoft at runtime, so the test project needs its own copy. -->
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <!-- Jellyfin assemblies are ExcludeAssets=runtime in the plugin, so supply them here for the test host. -->
+    <PackageReference Include="Jellyfin.Controller" Version="10.11.3" />
     <PackageReference Include="Jellyfin.Model" Version="10.11.3" />
   </ItemGroup>
 
