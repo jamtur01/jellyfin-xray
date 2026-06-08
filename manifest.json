@@ -1,0 +1,12 @@
+[
+  {
+    "guid": "b4e9c1a2-7d3f-4e8a-9c1b-2f6a5d8e3c7b",
+    "name": "X-Ray",
+    "description": "Adds an X-Ray button to the Jellyfin web player showing cast, character names and headshots during playback.",
+    "overview": "Cast and character overlay during playback.",
+    "owner": "jamesturnbull",
+    "category": "General",
+    "imageUrl": "https://raw.githubusercontent.com/jamesturnbull/jellyfin-plugin-xray/main/icon.png",
+    "versions": []
+  }
+]
