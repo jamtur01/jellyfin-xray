@@ -350,3 +350,7 @@ MigrationBackup/
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+# JS tooling
+node_modules/
+Jellyfin.Plugin.Xray/Web/dist/

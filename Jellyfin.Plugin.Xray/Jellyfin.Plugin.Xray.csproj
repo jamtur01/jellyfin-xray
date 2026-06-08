@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <RootNamespace>Jellyfin.Plugin.Xray</RootNamespace>
+    <AssemblyName>Jellyfin.Plugin.Xray</AssemblyName>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Jellyfin.Controller" Version="10.11.3">
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="Jellyfin.Model" Version="10.11.3">
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+    <!--
+      Newtonsoft is provided by the Jellyfin server in the default load context.
+      ExcludeAssets=runtime keeps our copy OUT of the plugin package so our JObject
+      shares type identity with the JavaScript Injector's JObject across load
+      contexts; otherwise the reflection RegisterScript(JObject) call throws a type
+      mismatch. Version 13.0.1 matches what the injector compiled against.
+    -->
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1">
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Configuration\configPage.html" />
+    <EmbeddedResource Include="Web\loader.js" />
+    <EmbeddedResource Include="Web\dist\xray.js" />
+  </ItemGroup>
+
+</Project>
