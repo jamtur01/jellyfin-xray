@@ -43,4 +43,12 @@ public class InjectorClientTests
 
         Assert.False(ok);
     }
+
+    [Fact]
+    public void RegisterScript_ReturnsFalse_WhenMethodMissing()
+    {
+        // object has no static RegisterScript -> GetMethod returns null -> false, no throw.
+        var client = new InjectorClient(NullLogger<InjectorClient>.Instance, () => typeof(object));
+        Assert.False(client.RegisterScript(new JObject { ["id"] = "x" }));
+    }
 }

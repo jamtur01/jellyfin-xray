@@ -26,15 +26,23 @@ public sealed class InjectorClient
     }
 
     /// <summary>Gets a value indicating whether the injector plugin is loaded.</summary>
+    /// <remarks>
+    /// This property scans all loaded assemblies on every access. Callers should not poll it in a tight loop;
+    /// cache the result if availability needs to be checked repeatedly.
+    /// </remarks>
     public bool IsAvailable => _resolveInterface() is not null;
 
     /// <summary>Registers a script payload with the injector. Returns false if the injector is absent.</summary>
     public bool RegisterScript(JObject payload) =>
-        Invoke("RegisterScript", new object[] { payload }) is true;
+        Invoke("RegisterScript", [payload]) is true;
 
     /// <summary>Removes all scripts previously registered by the given plugin id.</summary>
+    /// <remarks>
+    /// Returns false only when the injector is absent or the reflected method throws; it does not indicate
+    /// how many scripts were removed (the injector may remove zero or more scripts and still return true).
+    /// </remarks>
     public bool UnregisterAll(string pluginId) =>
-        Invoke("UnregisterAllScriptsFromPlugin", new object[] { pluginId }) is not null;
+        Invoke("UnregisterAllScriptsFromPlugin", [pluginId]) is not null;
 
     private object? Invoke(string method, object[] args)
     {

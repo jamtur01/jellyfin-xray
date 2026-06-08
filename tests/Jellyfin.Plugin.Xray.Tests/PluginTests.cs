@@ -23,7 +23,7 @@ public class PluginMetadataTests
     public void GetPages_ReturnsConfigPageResource()
     {
         var resourceName = "Jellyfin.Plugin.Xray.Configuration.configPage.html";
-        var stream = typeof(Plugin).Assembly.GetManifestResourceStream(resourceName);
+        using var stream = typeof(Plugin).Assembly.GetManifestResourceStream(resourceName);
 
         Assert.NotNull(stream);
     }

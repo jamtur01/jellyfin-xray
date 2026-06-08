@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Jellyfin.Plugin.Xray;
 
 /// <summary>Registers X-Ray services into the Jellyfin DI container.</summary>
-public class PluginServiceRegistrator : IPluginServiceRegistrator
+public sealed class PluginServiceRegistrator : IPluginServiceRegistrator
 {
     /// <inheritdoc />
     public void RegisterServices(IServiceCollection serviceCollection, IServerApplicationHost applicationHost)

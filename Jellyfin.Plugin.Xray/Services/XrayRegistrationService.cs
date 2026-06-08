@@ -21,13 +21,26 @@ public sealed class XrayRegistrationService : IHostedService
     /// <inheritdoc />
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        var version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "1.0.0.0";
-        var loader = ReadLoaderResource();
+        var assembly = Assembly.GetExecutingAssembly();
+        var version = assembly.GetName().Version?.ToString() ?? "1.0.0.0";
+
+        string loader;
+        try { loader = ReadLoaderResource(assembly); }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogError(ex, "X-Ray startup failed: embedded loader.js is missing.");
+            throw;
+        }
+
         var payload = LoaderPayload.Build(loader, version);
 
         if (_injector.RegisterScript(payload))
         {
             _logger.LogInformation("X-Ray loader registered with the JavaScript Injector.");
+        }
+        else
+        {
+            _logger.LogWarning("X-Ray loader not registered; the JavaScript Injector plugin is absent.");
         }
 
         return Task.CompletedTask;
@@ -40,9 +53,9 @@ public sealed class XrayRegistrationService : IHostedService
         return Task.CompletedTask;
     }
 
-    private static string ReadLoaderResource()
+    private static string ReadLoaderResource(Assembly assembly)
     {
-        using var stream = Assembly.GetExecutingAssembly()
+        using var stream = assembly
             .GetManifestResourceStream("Jellyfin.Plugin.Xray.Web.loader.js")
             ?? throw new InvalidOperationException("Embedded loader.js resource missing.");
         using var reader = new StreamReader(stream);

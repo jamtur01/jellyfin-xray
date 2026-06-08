@@ -31,6 +31,11 @@ public class XrayController : ControllerBase
     }
 
     /// <summary>Serves the client configuration as JSON.</summary>
+    /// <remarks>
+    /// [AllowAnonymous] is intentional: this endpoint returns only non-sensitive UI display preferences.
+    /// The client loads it via a plain fetch before the session token is available, so authentication
+    /// cannot be required here.
+    /// </remarks>
     [HttpGet("config")]
     [AllowAnonymous]
     public ActionResult<ConfigDto> GetConfig() =>
