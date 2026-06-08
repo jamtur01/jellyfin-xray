@@ -4,6 +4,8 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,6 +14,8 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
     <!-- The plugin excludes Newtonsoft at runtime, so the test project needs its own copy. -->
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <!-- Jellyfin assemblies are ExcludeAssets=runtime in the plugin, so supply them here for the test host. -->
+    <PackageReference Include="Jellyfin.Model" Version="10.11.3" />
   </ItemGroup>
 
   <ItemGroup>
