@@ -1839,7 +1839,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "24"
 
       - name: Build client bundle
         working-directory: Jellyfin.Plugin.Xray
