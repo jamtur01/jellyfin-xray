@@ -5,10 +5,11 @@ function firstInitial(name) {
   return (name || '?').trim().charAt(0).toUpperCase();
 }
 
-function buildCard(person, apiClient) {
+function buildCard(person, apiClient, index) {
   const card = document.createElement('button');
   card.className = 'xray-card';
   card.type = 'button';
+  card.style.setProperty('--i', index);
 
   const url = headshotUrl(apiClient, person);
   if (url) {
@@ -55,7 +56,14 @@ export function buildPanel({ item, cast, apiClient, onClose }) {
 
   const header = document.createElement('div');
   header.className = 'xray-header';
-  header.textContent = contextHeader(item);
+  const eyebrow = document.createElement('span');
+  eyebrow.className = 'xray-eyebrow';
+  eyebrow.textContent = 'X-Ray';
+  const title = document.createElement('span');
+  title.className = 'xray-title';
+  title.textContent = contextHeader(item);
+  header.appendChild(eyebrow);
+  header.appendChild(title);
   panel.appendChild(header);
 
   if (!cast || cast.length === 0) {
@@ -66,11 +74,16 @@ export function buildPanel({ item, cast, apiClient, onClose }) {
     return panel;
   }
 
+  const count = document.createElement('div');
+  count.className = 'xray-count';
+  count.textContent = `${cast.length} cast ${cast.length === 1 ? 'member' : 'members'}`;
+  panel.appendChild(count);
+
   const list = document.createElement('div');
   list.className = 'xray-list';
-  for (const person of cast) {
-    list.appendChild(buildCard(person, apiClient));
-  }
+  cast.forEach((person, index) => {
+    list.appendChild(buildCard(person, apiClient, index));
+  });
   panel.appendChild(list);
 
   return panel;

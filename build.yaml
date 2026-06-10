@@ -1,7 +1,7 @@
 ---
 name: "X-Ray"
 guid: "b4e9c1a2-7d3f-4e8a-9c1b-2f6a5d8e3c7b"
-version: "1.0.0.1"
+version: "1.0.1.0"
 targetAbi: "10.11.0.0"
 framework: "net9.0"
 owner: "jamtur01"
@@ -14,6 +14,9 @@ category: "General"
 artifacts:
   - "Jellyfin.Plugin.Xray.dll"
 changelog: >
+  ### 1.0.1.0
+  - Redesigned the cast overlay: glass cards, gold accent on character names,
+    staggered card reveal, refined header with cast count, and hover states.
   ### 1.0.0.1
   - Update development dependencies (vitest 4, esbuild 0.28, jsdom 29); no functional changes.
   ### 1.0.0.0
