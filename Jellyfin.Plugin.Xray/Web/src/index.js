@@ -1,6 +1,6 @@
 import css from './xray.css';
 import { startObserver } from './observer.js';
-import { currentItemId, fetchItem } from './data.js';
+import { resolveItemId, fetchItem } from './data.js';
 import { selectCast } from './format.js';
 import { buildPanel } from './panel.js';
 
@@ -53,7 +53,7 @@ async function openPanel() {
   }
   panelLoading = true;
   try {
-    const itemId = currentItemId();
+    const itemId = await resolveItemId(window.ApiClient);
     if (!itemId) {
       return;
     }

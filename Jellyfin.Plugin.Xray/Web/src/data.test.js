@@ -1,5 +1,47 @@
 import { describe, it, expect, vi } from 'vitest';
-import { currentItemId, headshotUrl, fetchItem } from './data.js';
+import { currentItemId, headshotUrl, fetchItem, nowPlayingItemId, resolveItemId } from './data.js';
+
+function apiWithSessions(sessions, deviceId = 'dev-1', userId = 'user-1') {
+  return {
+    getCurrentUserId: () => userId,
+    deviceId: () => deviceId,
+    getSessions: vi.fn(async () => sessions)
+  };
+}
+
+describe('nowPlayingItemId', () => {
+  it("returns this device's now-playing item id", async () => {
+    const api = apiWithSessions([
+      { DeviceId: 'other', NowPlayingItem: { Id: 'x' } },
+      { DeviceId: 'dev-1', NowPlayingItem: { Id: 'heat-1' } }
+    ]);
+    expect(await nowPlayingItemId(api)).toBe('heat-1');
+    expect(api.getSessions).toHaveBeenCalledWith({ ControllableByUserId: 'user-1' });
+  });
+
+  it('returns null when this device is not playing anything', async () => {
+    const api = apiWithSessions([{ DeviceId: 'dev-1' }, { DeviceId: 'other', NowPlayingItem: { Id: 'x' } }]);
+    expect(await nowPlayingItemId(api)).toBeNull();
+  });
+
+  it('returns null and does not throw when getSessions fails', async () => {
+    const api = { getCurrentUserId: () => 'u', deviceId: () => 'd', getSessions: vi.fn(async () => { throw new Error('boom'); }) };
+    expect(await nowPlayingItemId(api)).toBeNull();
+  });
+});
+
+describe('resolveItemId', () => {
+  it('prefers the id from the hash when present', async () => {
+    const api = apiWithSessions([{ DeviceId: 'dev-1', NowPlayingItem: { Id: 'session-id' } }]);
+    expect(await resolveItemId(api, '#/video?id=hash-id')).toBe('hash-id');
+    expect(api.getSessions).not.toHaveBeenCalled();
+  });
+
+  it('falls back to the session when the hash has no id', async () => {
+    const api = apiWithSessions([{ DeviceId: 'dev-1', NowPlayingItem: { Id: 'session-id' } }]);
+    expect(await resolveItemId(api, '#/video')).toBe('session-id');
+  });
+});
 
 describe('currentItemId', () => {
   it('reads the id from a video hash', () => {

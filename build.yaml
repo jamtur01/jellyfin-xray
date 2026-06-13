@@ -1,7 +1,7 @@
 ---
 name: "X-Ray"
 guid: "b4e9c1a2-7d3f-4e8a-9c1b-2f6a5d8e3c7b"
-version: "1.0.1.1"
+version: "1.0.2.0"
 targetAbi: "10.11.0.0"
 framework: "net9.0"
 owner: "jamtur01"
@@ -14,6 +14,10 @@ category: "General"
 artifacts:
   - "Jellyfin.Plugin.Xray.dll"
 changelog: >
+  ### 1.0.2.0
+  - Fix the X-Ray button doing nothing on the experimental web client: the playback
+    route has no item id in the URL, so resolve the now-playing item from the
+    session API as a fallback.
   ### 1.0.1.1
   - Bump esbuild to 0.28.1 (development dependency); no functional changes.
   ### 1.0.1.0
